@@ -15,9 +15,11 @@
       }
       .box {
         width: 500px;
-        height: 282px;
+        height: 280px;
         margin: 0 auto;
         overflow: hidden;
+        border-radius: 1em;
+        box-shadow: 1px 1px 3px;
       }
       ul {
         width: 5000px;
@@ -26,12 +28,30 @@
         position: relative;
         left: 0;
       }
-      li {
+      ul > li {
         float: left;
         background-color: yellow;
       }
       li > img {
         width: 500px;
+      }
+      ol {
+        width: inherit;
+        transform: translateY(-1.5em);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .point {
+        width: 1em;
+        height: 1em;
+        margin-right: 1em;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        box-shadow: 1px 1px 3px;
+      }
+      .active {
+        background: rgba(255, 255, 255, 1);
       }
     </style>
     <script>
@@ -39,38 +59,156 @@
         // 获取ul元素
         let ul = document.getElementById("ul"),
           // 保存ul的left值
-          ulLeft = 0;
+          ulLeft = [],
+          //获取point元素
+          points = document.getElementsByClassName("point"),
+          //point的定时切换
+          timer;
+
         // 将ul的第一个子元素克隆为ul的最后一个子元素
         ul.appendChild(ul.children[0].cloneNode(true));
+        // 将ul的最后一个子元素克隆为ul的第一个子元素
+        ul.insertBefore(ul.children[ul.children.length - 2].cloneNode(true), ul.children[0]);
+
+        //给ulLeft数组添加元素
+        for (let i = 0; i < ul.children.length; i++) {
+          ulLeft.push(-500 * i);
+        }
+
+        //ul内容显示为图1
+        ul.style.left = ulLeft[1] + "px";
+
+        const pointsFun = function () {
+          for (let i = 0; i < points.length; i++) {
+            //重置point的class属性
+            points[i].className = "point";
+            //给所有point添加鼠标移入事件
+            points[i].onmouseover = function () {
+              //先清除定时器
+              clearTimeout(timer);
+              clearInterval(swiperTimer);
+              //获取上一个active的元素
+              let active = document.getElementsByClassName("active")[0];
+              //调用pointsFun，重置point的class属性
+              pointsFun();
+              //添加动画属性
+              ul.style.transition = "left 1s";
+              //给point添加选中状态
+              this.className += " " + "active";
+              //每次鼠标移动到points[0]上时，判断上一个元素是否为最后一个元素
+              //如果是，则移动到图1副本的位置，同时设置定时器跳转到图一位置，定
+              //时跳转时并无动画特效，所以视觉上是图6到图1无缝循环
+              if (i === 0) {
+                if (active != undefined && active.offsetLeft === 314) {
+                  //播放图6到图1副本的动画
+                  ul.style.left = ulLeft[ulLeft.length - 1] + "px";
+                  //将ul的transition属性设置为none,暂时关闭动画效果
+                  ul.style.transition = "none";
+                  //在动画进行的一瞬间，从图6跳到图6副本
+                  ul.style.left = ulLeft[0] + "px";
+                  //这时开启一个短暂一次性的定时器，用于播放从图6副本到图1的动画
+                  setTimeout(() => {
+                    ul.style.transition = "left 0.3s";
+                    ul.style.left = ulLeft[1] + "px";
+                  }, 100);
+                } else {
+                  ul.style.left = ulLeft[i + 1] + "px";
+                }
+              }
+              //每次鼠标移动到最后一个points上时，判断上一个选中的元素是否为
+              //第一个元素如果是，则移动到图6副本的位置
+              else if (i === points.length - 1) {
+                if (active != undefined && active.offsetLeft === 154) {
+                  //播放图1到图6副本的动画
+                  ul.style.left = ulLeft[0] + "px";
+                  //将ul的transition属性设置为none,暂时关闭动画效果
+                  ul.style.transition = "none";
+                  //在动画进行的一瞬间，从图1跳到图1副本
+                  ul.style.left = ulLeft[ulLeft.length - 1] + "px";
+                  //这时开启一个短暂一次性的定时器，用于播放从图1副本到图6的动画
+                  setTimeout(function () {
+                    ul.style.transition = "left 0.3s";
+                    ul.style.left = ulLeft[ulLeft.length - 2] + "px";
+                  }, 100);
+                } else {
+                  ul.style.left = ulLeft[i + 1] + "px";
+                }
+              } else {
+                ul.style.transition = "left 0.3s";
+                ul.style.left = ulLeft[i + 1] + "px";
+              }
+            };
+            //鼠标移出，从当前选中的point继续轮播
+            points[i].onmouseout = function () {
+              //js中传递参数为0开头的数字时候，存在转码的问题
+              //解决方案：将参数使用toString()转换为字符串类型传递，
+              //在函数中需要调用该参数时再使用parseInt()转换为数字类型调用
+              time(i.toString());
+              swiper(i.toString());
+            };
+          }
+        };
+        pointsFun();
+        //在未传参之前，作为swiper的初始参数
+        let i = 1,
+          swiperTimer;
         // 定时器
         // 开启自动轮播
-        let timer = setInterval(() => {
-          //因为图片宽度为500px，所以每运行一次，则ulLeft-500
-          ulLeft = ulLeft - 500;
-          //给ul添加transition属性
-          ul.style.transition = "left 1.6s";
-          //使ul向左偏移-500px
-          ul.style.left = ulLeft + "px";
-
-          //如果偏移到-3500，则表示到第一张的副本动画也播放完成了
-          //此时应该跳转到第二张，开始新一轮循环
-          //注意在跳转过程中是不需要动画效果的
-          if (ulLeft == -3500) {
-            //将ul的transition属性设置为none,暂时关闭动画效果
-            ul.style.transition = "none";
-            ulLeft = 0;
-            //此时已经从第一张的副本，跳转到了第一张，因为两张图片是一样的，且跳转速度极快，所以用户分辨不出区别
-            ul.style.left = ulLeft + "px";
-            //这时开启一个短暂一次性的定时器，用于播放从第一张到第二张的动画
-            //注意此定时器的运行时间不能太快，否则可能导致动画倒放
-            setTimeout(() => {
-              console.log(ulLeft);
-              ulLeft = ulLeft - 500;
-              ul.style.transition = "left 1.6s";
-              ul.style.left = ulLeft + "px";
-            }, 100);
+        const swiper = function (index) {
+          if (index) {
+            parseInt(index);
+            console.log(typeof index);
+            i = index + 1;
           }
-        }, 1600);
+          swiperTimer = setInterval(() => {
+            i++;
+            //给ul添加transition属性
+            ul.style.transition = "left 0.3s";
+            //使ul向左偏移-500px
+            ul.style.left = ulLeft[i] + "px";
+            //如果偏移到-3500，则表示到第一张的副本动画也播放完成了
+            //此时应该跳转到第二张，开始新一轮循环
+            //注意在跳转过程中是不需要动画效果的
+            if (ulLeft[i] == undefined) {
+              i = 1;
+              //将ul的transition属性设置为none,暂时关闭动画效果
+              ul.style.transition = "none";
+              //此时已经从第一张的副本，跳转到了第一张，因为两张图片是一样的，且跳转速度极快，所以用户分辨不出区别
+              ul.style.left = ulLeft[i] + "px";
+              //这时开启一个短暂一次性的定时器，用于播放从第一张到第二张的动画
+              //注意此定时器的运行时间不能太快，否则可能导致动画倒放
+              setTimeout(() => {
+                i++;
+                ul.style.transition = "left 0.3s";
+                ul.style.left = ulLeft[i] + "px";
+              }, 100);
+            }
+          }, 1600);
+        };
+        swiper();
+        //在未传参之前，作为time的初始参数
+        let pointsIndex = 0;
+        //初始化point选中
+        points[pointsIndex].className += " " + "active";
+        //point定时器
+        const time = function (index) {
+          if (index) {
+            parseInt(index);
+            pointsIndex = index;
+          }
+          timer = setInterval(function () {
+            //每次执行timer，先将point的class属性重置
+            for (let i = 0; i < points.length; i++) {
+              points[i].className = "point";
+            }
+            pointsIndex++;
+            if (pointsIndex == points.length) {
+              pointsIndex = 0;
+            }
+            points[pointsIndex].className += " " + "active";
+          }, 1600);
+        };
+        time();
       };
     </script>
   </head>
@@ -84,6 +222,14 @@
         <li><img src="images/s5.jpg" alt="" /></li>
         <li><img src="images/s6.jpg" alt="" /></li>
       </ul>
+      <ol>
+        <li class="point"></li>
+        <li class="point"></li>
+        <li class="point"></li>
+        <li class="point"></li>
+        <li class="point"></li>
+        <li class="point"></li>
+      </ol>
     </div>
   </body>
 </html>
