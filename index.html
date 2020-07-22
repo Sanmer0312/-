@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ul,
+      li {
+        list-style: none;
+      }
+      .box {
+        width: 500px;
+        height: 282px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      ul {
+        width: 5000px;
+        height: 22px;
+        background-color: aqua;
+        position: relative;
+        left: 0;
+      }
+      li {
+        float: left;
+        background-color: yellow;
+      }
+      li > img {
+        width: 500px;
+      }
+    </style>
+    <script>
+      window.onload = function () {
+        // 获取ul元素
+        let ul = document.getElementById("ul"),
+          // 保存ul的left值
+          ulLeft = 0;
+        // 将ul的第一个子元素克隆为ul的最后一个子元素
+        ul.appendChild(ul.children[0].cloneNode(true));
+        // 定时器
+        // 开启自动轮播
+        let timer = setInterval(() => {
+          //因为图片宽度为500px，所以每运行一次，则ulLeft-500
+          ulLeft = ulLeft - 500;
+          //给ul添加transition属性
+          ul.style.transition = "left 1.6s";
+          //使ul向左偏移-500px
+          ul.style.left = ulLeft + "px";
+
+          //如果偏移到-3500，则表示到第一张的副本动画也播放完成了
+          //此时应该跳转到第二张，开始新一轮循环
+          //注意在跳转过程中是不需要动画效果的
+          if (ulLeft == -3500) {
+            //将ul的transition属性设置为none,暂时关闭动画效果
+            ul.style.transition = "none";
+            ulLeft = 0;
+            //此时已经从第一张的副本，跳转到了第一张，因为两张图片是一样的，且跳转速度极快，所以用户分辨不出区别
+            ul.style.left = ulLeft + "px";
+            //这时开启一个短暂一次性的定时器，用于播放从第一张到第二张的动画
+            //注意此定时器的运行时间不能太快，否则可能导致动画倒放
+            setTimeout(() => {
+              console.log(ulLeft);
+              ulLeft = ulLeft - 500;
+              ul.style.transition = "left 1.6s";
+              ul.style.left = ulLeft + "px";
+            }, 100);
+          }
+        }, 1600);
+      };
+    </script>
+  </head>
+  <body>
+    <div class="box">
+      <ul id="ul">
+        <li><img src="images/s1.jpg" alt="" /></li>
+        <li><img src="images/s2.jpg" alt="" /></li>
+        <li><img src="images/s3.jpg" alt="" /></li>
+        <li><img src="images/s4.jpg" alt="" /></li>
+        <li><img src="images/s5.jpg" alt="" /></li>
+        <li><img src="images/s6.jpg" alt="" /></li>
+      </ul>
+    </div>
+  </body>
+</html>
