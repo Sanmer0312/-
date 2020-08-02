@@ -139,13 +139,16 @@
                 ul.style.left = ulLeft[i + 1] + "px";
               }
             };
-            //鼠标移出，从当前选中的point继续轮播
+             //鼠标移出，从当前选中的point继续轮播
             points[i].onmouseout = function () {
               //js中传递参数为0开头的数字时候，存在转码的问题
-              //解决方案：将参数使用toString()转换为字符串类型传递，
-              //在函数中需要调用该参数时再使用parseInt()转换为数字类型调用
-              time(i.toString());
-              swiper(i.toString());
+              if (i == 0) {
+                time("0");
+                swiper("0");
+              } else {
+                time(i);
+                swiper(i);
+              }
             };
           }
         };
