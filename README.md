@@ -3,23 +3,7 @@
 
 最外层是一个固定宽度且带有`overflow: hidden;`属性的盒子
 
-* 盒子结构
-    > swiper-box
-    > >  imgs-list
-    
-        > > > img
-        
-        > > > img
-        
-        > > > ...
-        
-    > > points-list
-    
-        > > > point
-        
-        > > > point
-        
-        > > > ...
+盒子内是两个列表，一个图片列表，一个point列表
 
 图片列表里的图片是水平排列`float: left;`的
 
