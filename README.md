@@ -3,11 +3,20 @@
 
 最外层是一个固定宽度且带有`overflow: hidden;`属性的盒子
 
-盒子内是两个列表，一个图片列表，一个point列表
+* 盒子结构
+    > swiper-box
+    >> imgs-list
+    >>> img
+    >>> img
+    >>> ...
+    >> points-list
+    >>> point
+    >>> point
+    >>> ...
 
 图片列表里的图片是水平排列`float: left;`的
 
-point列表里的point数量等于需要轮播的图片的数量
+points-list里的point数量等于需要轮播的图片的数量
 
 每次轮播时会根据此时播放的图片，给对应的point添加`class='active'`
 
