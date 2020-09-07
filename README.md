@@ -6,7 +6,6 @@
 * 盒子结构
     > swiper-box
     >>  imgs-list
-    
         >>> img
         
         >>> img
