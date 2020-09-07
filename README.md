@@ -6,12 +6,19 @@
 * 盒子结构
     > swiper-box
     > + imgs-list
+    
         - img
+        
         - img
+        
         - ...
+        
     > + points-list
+    
         - point
+        
         - point
+        
         - ...
 
 图片列表里的图片是水平排列`float: left;`的
