@@ -1,4 +1,5 @@
 # 原生JS无缝轮播图
+
 ## HTML部分
 
 最外层是一个固定宽度且带有`overflow: hidden;`属性的盒子
@@ -36,3 +37,4 @@ points-list里的point数量等于需要轮播的图片的数量
 
 ### 代码内有详细注释  
 
+[在线预览](https://sanmer0312.github.io/JS-Swiper/)
