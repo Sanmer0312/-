@@ -37,4 +37,4 @@ points-list里的point数量等于需要轮播的图片的数量
 
 ### 代码内有详细注释  
 
-[在线预览](https://sanmer0312.github.io/JS-Swiper/index.html)
+[在线预览](https://sanmer0312.github.io/JS-Swiper/index.html)，如果无法打开预览，原因是部分运营商DNS污染（域名指往不正确的IP地址），可以通过 修改hosts文件 / 修改DNS服务器 / 代理 的方式访问
