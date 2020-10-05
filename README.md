@@ -1,5 +1,7 @@
 # 原生JS无缝轮播图
 
+[在线预览](https://sanmer0312.github.io/JS-Swiper/index.html)，如果无法打开预览，原因是部分运营商DNS污染（域名指往不正确的IP地址），可以通过 修改hosts文件 / 修改DNS服务器 / 代理 的方式访问
+
 ## HTML部分
 
 最外层是一个固定宽度且带有`overflow: hidden;`属性的盒子
@@ -36,5 +38,3 @@ points-list里的point数量等于需要轮播的图片的数量
 如果是，则跳转到最后一张图副本位置，紧接着播放最后一张图副本到图1的动画
 
 ### 代码内有详细注释  
-
-[在线预览](https://sanmer0312.github.io/JS-Swiper/index.html)，如果无法打开预览，原因是部分运营商DNS污染（域名指往不正确的IP地址），可以通过 修改hosts文件 / 修改DNS服务器 / 代理 的方式访问
